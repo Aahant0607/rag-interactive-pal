@@ -80,13 +80,19 @@ export function search(chunks: Chunk[], query: string, topK = 8): Hit[] {
     if (!df) continue;
     const idf = Math.log(1 + (idx.n - df + 0.5) / (df + 0.5));
     for (let i = 0; i < idx.n; i++) {
-      const f = idx.tf[i].get(term);
+      const f = idx.tf[i]?.get(term);
       if (!f) continue;
-      scores[i] += idf * ((f * (k1 + 1)) / (f + k1 * (1 - b + (b * idx.len[i]) / idx.avg)));
+      const dl = idx.len[i] ?? idx.avg;
+      scores[i] += idf * ((f * (k1 + 1)) / (f + k1 * (1 - b + (b * dl) / idx.avg)));
     }
   }
   const order: Hit[] = [];
-  for (let i = 0; i < idx.n; i++) if (scores[i] > 0) order.push({ chunk: chunks[i], score: scores[i] });
+  for (let i = 0; i < idx.n; i++) {
+    const s = scores[i] ?? 0;
+    const chunk = chunks[i];
+    if (s > 0 && chunk) order.push({ chunk, score: s });
+  }
+
   order.sort((a, b2) => b2.score - a.score);
   return order.slice(0, topK);
 }
