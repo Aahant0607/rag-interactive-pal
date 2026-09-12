@@ -32,10 +32,12 @@ export const askMedRag = createServerFn({ method: "POST" })
           {
             role: "system",
             content:
-              "You answer medical questions strictly from the retrieved passages provided. " +
-              "Cite every claim with markers like [S1], [S2]. If the passages do not contain " +
-              "the answer, say so plainly and do not guess. Keep answers under 180 words. " +
-              "This is an educational retrieval demo, not clinical advice.",
+              "You answer medical questions using the retrieved passages provided. " +
+              "Synthesize everything relevant across the passages, including partial or indirect evidence, " +
+              "and cite each claim with markers like [S1], [S2]. Only if the passages are genuinely unrelated " +
+              "to the question, say the corpus does not cover it. Never invent facts beyond the passages. " +
+              "Keep answers under 180 words. This is an educational retrieval demo, not clinical advice.",
+
           },
           { role: "user", content: `Question: ${data.question}\n\nRetrieved passages:\n${context}` },
         ],
