@@ -11,8 +11,9 @@ export function CorpusStats({ chunks }: { chunks: Chunk[] }) {
     for (const c of chunks) {
       src.set(c.st, (src.get(c.st) ?? 0) + 1);
       if (c.st === "textbook") doc.set(c.d, (doc.get(c.d) ?? 0) + 1);
-      const b = Math.min(5, Math.floor(c.tk / 100));
-      buckets[b] += 1;
+      const bi = Math.min(5, Math.floor(c.tk / 100));
+      buckets[bi] = (buckets[bi] ?? 0) + 1;
+
     }
     return {
       bySource: [...src].map(([name, value]) => ({ name, value })),
