@@ -83,7 +83,7 @@ export function search(chunks: Chunk[], query: string, topK = 8): Hit[] {
       const f = idx.tf[i]?.get(term);
       if (!f) continue;
       const dl = idx.len[i] ?? idx.avg;
-      scores[i] += idf * ((f * (k1 + 1)) / (f + k1 * (1 - b + (b * dl) / idx.avg)));
+      scores[i] = (scores[i] ?? 0) + idf * ((f * (k1 + 1)) / (f + k1 * (1 - b + (b * dl) / idx.avg)));
     }
   }
   const order: Hit[] = [];
