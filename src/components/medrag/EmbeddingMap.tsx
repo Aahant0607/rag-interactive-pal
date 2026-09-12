@@ -14,9 +14,15 @@ export function EmbeddingMap({
 }) {
   const [hover, setHover] = useState<Chunk | null>(null);
   const neighbours = useMemo(
-    () => (selected ? selected.nb.map(([i, s]) => ({ chunk: chunks[i], sim: s })) : []),
+    () =>
+      selected
+        ? selected.nb
+            .map(([i, s]) => ({ chunk: chunks[i], sim: s }))
+            .filter((n): n is { chunk: Chunk; sim: number } => Boolean(n.chunk))
+        : [],
     [selected, chunks],
   );
+
   const nbSet = useMemo(() => new Set(neighbours.map((n) => n.chunk.i)), [neighbours]);
 
   return (
